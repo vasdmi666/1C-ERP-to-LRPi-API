@@ -1,0 +1,492 @@
+openapi: 3.0.0
+servers:
+  - url: https://lrpi.local/1C-API
+info:
+  description: 'Описание необходимых методов на стороне LRPi для возможности передачи данных'
+  version: "1.0.1"
+  title: '1C:ERP LRPi'
+  contact:
+    email: vasdmipro@gmail.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+tags:
+  - name: Main
+    description: 'Основное'
+paths:
+  /orders:
+    post:
+      tags:
+        - Main
+      summary: Метод для передачи актуальных заказов клиентов и их товарных позиций с кол-вом, с указанием желаемой даты готовности заказа
+      operationId: OrdersResult
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrdersResultRequest'
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                 $ref: '#/components/schemas/DefaultResponse'
+        '400':
+          description: Неверные параметры
+        '500':
+          description: Ошибка сервера
+
+  /goods-in-warehouses:
+    post:
+      tags:
+        - Main
+      summary: Метод для передачи остатков на всех складах.
+      operationId: GoodsInWarehouses
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GoodsInWarehousesRequest'
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                 $ref: '#/components/schemas/DefaultResponse'
+        '400':
+          description: Неверные параметры
+        '500':
+          description: Ошибка сервера
+
+  /orders-to-suppliers:
+    post:
+      tags:
+        - Main
+      summary: Метод для передачи актуальных заказов поставщикам с указанием даты, когда ожидается.
+      operationId: OrdersToSuppliers
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrdersToSuppliersRequest'
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                 $ref: '#/components/schemas/DefaultResponse'
+        '400':
+          description: Неверные параметры
+        '500':
+          description: Ошибка сервера
+
+  /production-composition:
+    post:
+      tags:
+        - Main
+      summary: Метод для передачи состава изделий.
+      operationId: ProductionComposition
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductionCompositionRequest'
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                 $ref: '#/components/schemas/DefaultResponse'
+        '400':
+          description: Неверные параметры
+        '500':
+          description: Ошибка сервера
+
+  /production-assignments:
+    post:
+      tags:
+        - Main
+      summary: Метод для передачи актуальных производственных заданий, которые запущены, но еще не завершены.
+      operationId: ProductionAssignments
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductionAssignmentsRequest'
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                 $ref: '#/components/schemas/DefaultResponse'
+        '400':
+          description: Неверные параметры
+        '500':
+          description: Ошибка сервера
+
+components:
+  schemas:
+    
+    ProductionCompositionRequest:
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          example: 'Лестница винтовая Spiral Staircase II'
+        main_product:
+          $ref: '#/components/schemas/Products'
+        main_characteristic:
+          $ref: '#/components/schemas/Characteristics'
+        output_products:
+          description: 'Выходные изделия'
+          type: array
+          items:
+            type: object
+            properties:
+              product:
+                $ref: '#/components/schemas/Products'
+              characteristic:
+                $ref: '#/components/schemas/Characteristics'
+              quantity:
+                type: number
+                example: 5
+                description: 'Количество'
+        waste:
+          description: 'Возвратные отходы'
+          type: array
+          items:
+            type: object
+            properties:
+              product:
+                $ref: '#/components/schemas/Products'
+              characteristic:
+                $ref: '#/components/schemas/Characteristics'
+              quantity:
+                type: number
+                example: 5
+                description: 'Количество'
+        materials:
+          description: 'Используемые материалы и работы'
+          type: array
+          items:
+            type: object
+            properties:
+              product:
+                $ref: '#/components/schemas/Products'
+              characteristic:
+                $ref: '#/components/schemas/Characteristics'
+              quantity:
+                type: number
+                example: 5
+                description: 'Количество'
+
+    ProductionAssignmentsRequest:
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          format: uuid
+        date:
+          type: string
+          format: date-time
+          example: '2023-08-03T18:06:15'
+        number:
+          type: string
+          example: '00-00000006'
+        goods:
+          type: array
+          items:
+            type: object
+            properties:
+              product:
+                $ref: '#/components/schemas/Products'
+              characteristic:
+                $ref: '#/components/schemas/Characteristics'
+              quantity:
+                type: number
+                example: 5
+                description: 'Количество'
+              packages:
+                type: number
+                example: 1
+                description: 'Количество упаковок'
+              start_date:
+                type: string
+                format: date
+                description: 'Дата старта'
+              finish_date:
+                type: string
+                format: date
+                description: 'Дата завершения'
+
+    OrdersToSuppliersRequest:
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          format: uuid
+        date:
+          type: string
+          format: date-time
+          example: '15-08-2022T16:03:15'
+        number:
+          type: string
+          example: 'ТД00-000047'
+        client:
+          $ref: '#/components/schemas/Clients'
+        organization:
+          $ref: '#/components/schemas/Clients'
+        goods:
+          type: array
+          items:
+            type: object
+            properties:
+              product:
+                $ref: '#/components/schemas/Products'
+              characteristic:
+                $ref: '#/components/schemas/Characteristics'
+              quantity:
+                type: number
+                example: 5
+                description: 'Количество'
+              packages:
+                type: number
+                example: 1
+                description: 'Количество упаковок'
+              price:
+                type: number
+                example: 2099.99
+                description: 'Цена'
+              amount:
+                type: number
+                example: 10499.95
+                description: 'Сумма'
+              VAT_amount:
+                type: number
+                example: 1749.99
+                description: 'Сумма НДС'
+              VAT_rate:
+                type: number
+                example: 20
+                description: 'Ставка НДС'
+              arrival_date:
+                type: string
+                format: date
+                description: 'Дата поступления'
+        arrival_date:
+          type: string
+          format: date
+          description: 'Дата поступления'
+        amount:
+          type: number
+          example: 10499.95
+          description: 'Сумма'
+          
+    GoodsInWarehousesRequest:
+      required:
+        - date
+      properties:
+        date:
+          type: string
+          format: date-time
+          example: '2023-08-03T18:00:00'
+          description: 'Дата актуальности остатков'
+        product:
+          $ref: '#/components/schemas/Products'
+        characteristic:
+          $ref: '#/components/schemas/Characteristics'
+        series:
+          $ref: '#/components/schemas/Series'
+        warehouse:
+          $ref: '#/components/schemas/Warehouse'
+        stock:
+          type: number
+          example: 10
+          description: 'Товаров в наличии'
+        reserved:
+          type: number
+          example: 1
+          description: 'Товаров зарезервированно к отгрузке'
+        
+    OrdersResultRequest:
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          format: uuid
+        date:
+          type: string
+          format: date-time
+          example: '25-08-2022T12:00:01'
+        number:
+          type: string
+          example: 'ТД00-000036'
+        client:
+          $ref: '#/components/schemas/Clients'
+        organization:
+          $ref: '#/components/schemas/Clients'
+        goods:
+          type: array
+          items:
+            type: object
+            properties:
+              product:
+                $ref: '#/components/schemas/Products'
+              characteristic:
+                $ref: '#/components/schemas/Characteristics'
+              quantity:
+                type: number
+                example: 5
+                description: 'Количество'
+              packages:
+                type: number
+                example: 1
+                description: 'Количество упаковок'
+              price:
+                type: number
+                example: 2099.99
+                description: 'Цена'
+              amount:
+                type: number
+                example: 10499.95
+                description: 'Сумма'
+              VAT_amount:
+                type: number
+                example: 1749.99
+                description: 'Сумма НДС'
+              VAT_rate:
+                type: number
+                example: 20
+                description: 'Ставка НДС'
+              shipping_date:
+                type: string
+                format: date
+                description: 'Дата отгрузки'
+        shipping_date:
+          type: string
+          format: date
+          description: 'Дата отгрузки'
+        amount:
+          type: number
+          example: 10499.95
+          description: 'Сумма'
+
+    Products:
+      description: 'Номенклатура'
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          format: uuid
+        article:
+          type: string
+          example: 'К-980'
+        name:
+          type: string
+          example: 'Эмаль ПФ-115 (эмаль) ГОСТ Р 51691'
+
+    Characteristics:
+      description: 'Характеристика номенклатуры'
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          example: 'RAL 7001 (серый)'
+
+    Warehouse:
+      description: 'Склад'
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          example: 'Склад отдела снабжения М1'
+
+    Series:
+      description: 'Серия номенклатуры'
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          example: 'ТБП_042017_3'
+
+    Clients:
+      description: 'Контрагент'
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          format: uuid
+        tin:
+          type: string
+          example: '7718057567'
+        name:
+          type: string
+          example: 'ООО РОМАШКА'
+  
+    Organizations:
+      description: 'Организация'
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          format: uuid
+        tin:
+          type: string
+          example: '7721049904'
+        name:
+          type: string
+          example: 'ООО "Металл-Сервис"'
+
+    DefaultResponse:
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum:
+            - success
+            - error
+          example: 'sucсess'
+        error_message:
+          type: string
+          description: 'Описание ошибки'
+      type: object
+
+
