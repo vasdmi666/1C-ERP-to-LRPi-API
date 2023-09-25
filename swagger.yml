@@ -26,7 +26,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/OrdersResultRequest'
+              type: array
+              items:
+                $ref: '#/components/schemas/OrdersResultRequest'
       responses:
         '200':
           description: Успешный ответ
@@ -51,7 +53,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/GoodsInWarehousesRequest'
+              type: array
+              items:
+                $ref: '#/components/schemas/GoodsInWarehousesRequest'
       responses:
         '200':
           description: Успешный ответ
@@ -76,7 +80,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/OrdersToSuppliersRequest'
+              type: array
+              items:
+                $ref: '#/components/schemas/OrdersToSuppliersRequest'
       responses:
         '200':
           description: Успешный ответ
@@ -101,7 +107,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ProductionCompositionRequest'
+              type: array
+              items:
+                $ref: '#/components/schemas/ProductionCompositionRequest'
       responses:
         '200':
           description: Успешный ответ
@@ -126,7 +134,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ProductionAssignmentsRequest'
+              type: array
+              items:
+                $ref: '#/components/schemas/ProductionAssignmentsRequest'
       responses:
         '200':
           description: Успешный ответ
