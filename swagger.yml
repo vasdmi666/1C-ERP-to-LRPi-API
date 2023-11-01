@@ -411,6 +411,9 @@ components:
         id:
           type: string
           format: uuid
+        code:
+          type: string
+          example: 'ЦУ-00000053'
         article:
           type: string
           example: 'К-980'
