@@ -420,6 +420,15 @@ components:
         name:
           type: string
           example: 'Эмаль ПФ-115 (эмаль) ГОСТ Р 51691'
+        unit:
+          type: object
+          properties:
+            code: 
+              type: string
+              example: '796'
+            name: 
+              type: string
+              example: 'шт'
 
     Characteristics:
       description: 'Характеристика номенклатуры'
